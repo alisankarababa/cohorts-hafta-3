@@ -11,4 +11,7 @@ public abstract class BaseEntity {
 
     private LocalDateTime timeOfCreation;
     private LocalDateTime timeOfUpdate;
+
+    public abstract Long getId();
+
 }
