@@ -18,6 +18,7 @@ public class CohortsHafta3Application {
 
         ApplicationContext applicationContext = SpringApplication.run(CohortsHafta3Application.class, args);
 
+        String lineSeparator = "\n\n------------------------------------------------------------------------------------------------\n\n";
         ICustomerService customerService = applicationContext.getBean(ICustomerService.class);
 
 
@@ -30,6 +31,10 @@ public class CohortsHafta3Application {
 
         logger.info("All customers:\n");
         customerService.findAll().forEach( customer -> logger.info("-" + customer + "\n"));
+        logger.info(lineSeparator);
+        logger.info("Customers whose firstname or lastname contains the letter \"c\"\n:");
+        customerService.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase('c').forEach( customer -> logger.info("-" + customer + "\n"));
+        logger.info(lineSeparator);
     }
 
 }
