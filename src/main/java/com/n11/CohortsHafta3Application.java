@@ -7,14 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDate;
-import java.util.logging.Logger;
+import java.time.Month;
+
 
 @SpringBootApplication
 public class CohortsHafta3Application {
-    private static final Logger logger = Logger.getLogger(CohortsHafta3Application.class.getName());
 
     public static void main(String[] args) {
-        SpringApplication.run(CohortsHafta3Application.class, args);
 
         ApplicationContext applicationContext = SpringApplication.run(CohortsHafta3Application.class, args);
 
@@ -29,12 +28,18 @@ public class CohortsHafta3Application {
         customerService.save(new Customer("Ceren", "Demir", "cerendemir@email.com", LocalDate.of(1992, 12, 3)));
 
 
-        logger.info("All customers:\n");
-        customerService.findAll().forEach( customer -> logger.info("-" + customer + "\n"));
-        logger.info(lineSeparator);
-        logger.info("Customers whose firstname or lastname contains the letter \"c\"\n:");
-        customerService.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase('c').forEach( customer -> logger.info("-" + customer + "\n"));
-        logger.info(lineSeparator);
+        System.out.println("All customers:\n");
+        customerService.findAll().forEach( customer -> System.out.println("-" + customer + "\n"));
+        System.out.println(lineSeparator);
+
+        System.out.println("Customers registered in June:\n");
+        customerService.findAllByTimeOfCreation_Month(Month.JUNE).forEach(customer -> System.out.println("-" + customer + "\n"));
+        System.out.println(lineSeparator);
+
+
+        System.out.println("Customers whose firstname or lastname contains the letter \"c\"\n:");
+        customerService.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase('c').forEach( customer -> System.out.println("-" + customer + "\n"));
+        System.out.println(lineSeparator);
     }
 
 }
