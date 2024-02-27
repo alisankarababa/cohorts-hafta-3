@@ -7,7 +7,12 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 public class CustomerIdSequenceGenerator implements ISequenceGenerator{
 
-    private static final AtomicLong idGenerator = new AtomicLong(1);
+    private final AtomicLong idGenerator;
+
+    public CustomerIdSequenceGenerator() {
+
+        idGenerator = new AtomicLong(1);
+    }
 
     public Long generateId() {
 
