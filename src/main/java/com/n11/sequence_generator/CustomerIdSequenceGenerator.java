@@ -1,14 +1,15 @@
 package com.n11.sequence_generator;
 
+import org.springframework.stereotype.Component;
+
 import java.util.concurrent.atomic.AtomicLong;
 
-public class CustomerIdSequenceGenerator {
+@Component
+public class CustomerIdSequenceGenerator implements ISequenceGenerator{
 
-    private CustomerIdSequenceGenerator() {
-    }
     private static final AtomicLong idGenerator = new AtomicLong(1);
 
-    public static Long generateId() {
+    public Long generateId() {
 
         return idGenerator.getAndIncrement();
     }

@@ -13,5 +13,6 @@ public abstract class BaseEntity {
     private LocalDateTime timeOfUpdate;
 
     public abstract Long getId();
+    public abstract void setId(Long id);
 
 }
