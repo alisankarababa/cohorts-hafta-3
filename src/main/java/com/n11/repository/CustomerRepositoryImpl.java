@@ -3,6 +3,7 @@ package com.n11.repository;
 import com.n11.entity.Customer;
 import com.n11.sequence_generator.CustomerIdSequenceGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import java.time.Month;
@@ -16,6 +17,7 @@ public class CustomerRepositoryImpl extends RepositoryImpl<Customer, CustomerIdS
 
     private final IBillRepository billRepository;
 
+    @Lazy
     @Autowired
     public CustomerRepositoryImpl(Map<Long, Customer> entityMap, CustomerIdSequenceGenerator sequenceGenerator, IBillRepository billRepository) {
         super(entityMap, sequenceGenerator);

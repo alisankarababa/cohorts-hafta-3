@@ -37,13 +37,17 @@ public class CohortsHafta3Application {
         customerService.findAll().forEach( customer -> System.out.println("-" + customer + "\n"));
         System.out.println(lineSeparator);
 
-        System.out.println("Customers registered in June:\n");
-        customerService.findAllByTimeOfCreation_Month(Month.JUNE).forEach(customer -> System.out.println("-" + customer + "\n"));
-        System.out.println(lineSeparator);
-
-
         System.out.println("Customers whose firstname or lastname contains the letter \"c\"\n:");
         customerService.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase('c').forEach( customer -> System.out.println("-" + customer + "\n"));
+        System.out.println(lineSeparator);
+
+        System.out.println("Sum of totalAmountDue of all the bills belonging to customers who registered in June");
+        System.out.println(
+                billService.findAllByCustomer_CreationTime_Month(Month.JUNE)
+                    .stream()
+                    .mapToDouble(Bill::getTotalAmountDue)
+                    .sum()
+        );
         System.out.println(lineSeparator);
 
 
