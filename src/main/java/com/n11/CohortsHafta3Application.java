@@ -1,6 +1,7 @@
 package com.n11;
 
 import com.n11.entity.Customer;
+import com.n11.service.IBillService;
 import com.n11.service.ICustomerService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +20,7 @@ public class CohortsHafta3Application {
 
         String lineSeparator = "\n\n------------------------------------------------------------------------------------------------\n\n";
         ICustomerService customerService = applicationContext.getBean(ICustomerService.class);
+        IBillService billService = applicationContext.getBean(IBillService.class);
 
 
         customerService.save(new Customer("Ali", "Veli", "aliveli@email.com", LocalDate.of(1994, 10, 11)));
@@ -39,6 +41,11 @@ public class CohortsHafta3Application {
 
         System.out.println("Customers whose firstname or lastname contains the letter \"c\"\n:");
         customerService.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase('c').forEach( customer -> System.out.println("-" + customer + "\n"));
+        System.out.println(lineSeparator);
+
+
+        System.out.println("All bills:\n");
+        billService.findAll().forEach( bill -> System.out.println("-" + bill + "\n"));
         System.out.println(lineSeparator);
     }
 
