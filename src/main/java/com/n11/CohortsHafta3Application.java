@@ -1,14 +1,17 @@
 package com.n11;
 
+import com.n11.entity.Bill;
 import com.n11.entity.Customer;
 import com.n11.service.IBillService;
 import com.n11.service.ICustomerService;
+import com.n11.util.Mean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 
 @SpringBootApplication
@@ -49,9 +52,18 @@ public class CohortsHafta3Application {
         System.out.println(lineSeparator);
 
 
+
+        List<Bill> billsHavingTotalAmountDueGreaterThanOrEqualTo1500 = billService.findAllByTotalAmountDueIsGreaterThanEqual(1500);
+
         System.out.println("All bills having totalAmountDue greater than or equal to 1500:\n");
-        billService.findAllByTotalAmountDueIsGreaterThanEqual(1500).forEach( bill -> System.out.println("-" + bill + "\n"));
+        billsHavingTotalAmountDueGreaterThanOrEqualTo1500.forEach(bill -> System.out.println("-" + bill + "\n"));
         System.out.println(lineSeparator);
+
+        System.out.println("Mean totalAmountDue of bills having totalAmountDue greater than or equal to 1500:\n");
+        System.out.printf("%.2f\n", Mean.calculate(billsHavingTotalAmountDueGreaterThanOrEqualTo1500));
+        System.out.println(lineSeparator);
+
+
     }
 
 }

@@ -1,5 +1,6 @@
 package com.n11.entity;
 
+import com.n11.interfaces.ITotalAmountDue;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-public class Bill extends BaseEntity{
+public class Bill extends BaseEntity implements ITotalAmountDue {
 
     private Long id;
     private Long customerId;
