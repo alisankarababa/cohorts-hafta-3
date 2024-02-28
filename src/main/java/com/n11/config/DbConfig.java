@@ -120,14 +120,14 @@ public class DbConfig {
     private Bill randomBill(Customer customer) {
 
         double min = 100;
-        double max = 10000;
+        double max = 3000;
 
         Bill bill = new Bill();
         bill.setId(billIdSequenceGenerator.generateId());
         bill.setCustomerId(customer.getId());
         LocalDateTime randomLocalDateTime = randomLocalDateTime();
 
-        bill.setTotalAmountDue(random.nextDouble(max - min) + min);
+        bill.setTotalAmountDue(random.nextDouble(min, max));
         bill.setTimeOfCreation(randomLocalDateTime);
         bill.setTimeOfUpdate(randomLocalDateTime);
 
