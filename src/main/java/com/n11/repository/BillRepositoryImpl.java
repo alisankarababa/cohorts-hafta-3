@@ -4,6 +4,7 @@ import com.n11.entity.Bill;
 import com.n11.sequence_generator.BillIdSequenceGenerator;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -11,5 +12,14 @@ public class BillRepositoryImpl extends RepositoryImpl<Bill, BillIdSequenceGener
 
     public BillRepositoryImpl(Map<Long, Bill> entityMap, BillIdSequenceGenerator sequenceGenerator) {
         super(entityMap, sequenceGenerator);
+    }
+
+    @Override
+    public List<Bill> findAllByTotalAmountDueIsGreaterThanEqual(double limit) {
+
+        return super.getEntityMap().values().stream()
+                .filter(bill -> bill.getTotalAmountDue() >= limit)
+                .toList();
+
     }
 }

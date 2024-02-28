@@ -47,6 +47,11 @@ public class CohortsHafta3Application {
         System.out.println("All bills:\n");
         billService.findAll().forEach( bill -> System.out.println("-" + bill + "\n"));
         System.out.println(lineSeparator);
+
+
+        System.out.println("All bills having totalAmountDue greater than or equal to 1500:\n");
+        billService.findAllByTotalAmountDueIsGreaterThanEqual(1500).forEach( bill -> System.out.println("-" + bill + "\n"));
+        System.out.println(lineSeparator);
     }
 
 }
