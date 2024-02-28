@@ -9,4 +9,5 @@ public interface ICustomerRepository extends IRepository<Customer, Long>{
 
     List<Customer> findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(char ch);
     List<Customer> findAllByTimeOfCreation_Month(Month month);
+    List<Customer> findAllByBills_TotalAmountDueIsLessThanOrEqual(double limit);
 }

@@ -63,6 +63,13 @@ public class CohortsHafta3Application {
         System.out.printf("%.2f\n", Mean.calculate(billsHavingTotalAmountDueGreaterThanOrEqualTo1500));
         System.out.println(lineSeparator);
 
+        System.out.println("Name of customers who has bills having totalAmountDue less than or equal to 500:\n");
+        System.out.println(
+                customerService.findAllByBills_TotalAmountDueIsLessThanOrEqual(500).stream()
+                        .map(Customer::getFirstName)
+                        .toList()
+        );
+        System.out.println(lineSeparator);
 
     }
 

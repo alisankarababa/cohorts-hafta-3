@@ -14,9 +14,12 @@ import java.util.function.Predicate;
 @Repository
 public class CustomerRepositoryImpl extends RepositoryImpl<Customer, CustomerIdSequenceGenerator> implements ICustomerRepository {
 
+    private final IBillRepository billRepository;
+
     @Autowired
-    public CustomerRepositoryImpl(Map<Long, Customer> entityMap, CustomerIdSequenceGenerator sequenceGenerator) {
+    public CustomerRepositoryImpl(Map<Long, Customer> entityMap, CustomerIdSequenceGenerator sequenceGenerator, IBillRepository billRepository) {
         super(entityMap, sequenceGenerator);
+        this.billRepository = billRepository;
     }
 
     @Override
@@ -40,6 +43,19 @@ public class CustomerRepositoryImpl extends RepositoryImpl<Customer, CustomerIdS
     public List<Customer> findAllByTimeOfCreation_Month(Month month) {
 
         return queryCustomers(customer -> customer.getTimeOfCreation().getMonth() == month );
+    }
+
+    @Override
+    public List<Customer> findAllByBills_TotalAmountDueIsLessThanOrEqual(double limit) {
+
+        return super.findAll().stream()
+                .filter(
+                    customer ->
+                        !billRepository
+                        .findAllByCustomerIdAndTotalAmountDueIsLessThanEqual(customer.getId(), limit)
+                        .isEmpty()
+                )
+                .toList();
     }
 
     private List<Customer> queryCustomers(Predicate<Customer> predicate) {

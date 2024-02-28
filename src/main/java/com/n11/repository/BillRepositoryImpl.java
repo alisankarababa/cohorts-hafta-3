@@ -22,4 +22,11 @@ public class BillRepositoryImpl extends RepositoryImpl<Bill, BillIdSequenceGener
                 .toList();
 
     }
+
+    @Override
+    public List<Bill> findAllByCustomerIdAndTotalAmountDueIsLessThanEqual(long customerId, double limit) {
+        return super.findAll().stream()
+                .filter(bill -> bill.getCustomerId() == customerId && bill.getTotalAmountDue() <= limit)
+                .toList();
+    }
 }

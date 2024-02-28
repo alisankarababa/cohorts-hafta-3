@@ -27,4 +27,10 @@ public class CustomerServiceImpl extends BaseEntityServiceImpl<Customer, ICustom
 
         return super.getRepository().findAllByTimeOfCreation_Month(month);
     }
+
+    @Override
+    public List<Customer> findAllByBills_TotalAmountDueIsLessThanOrEqual(double limit) {
+
+        return super.getRepository().findAllByBills_TotalAmountDueIsLessThanOrEqual(limit);
+    }
 }

@@ -7,4 +7,5 @@ import java.util.List;
 public interface IBillRepository extends IRepository<Bill, Long> {
 
     List<Bill> findAllByTotalAmountDueIsGreaterThanEqual(double limit);
+    List<Bill> findAllByCustomerIdAndTotalAmountDueIsLessThanEqual(long customerId, double limit);
 }
