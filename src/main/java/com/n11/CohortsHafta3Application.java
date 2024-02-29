@@ -1,12 +1,10 @@
 package com.n11;
 
 import com.n11.entity.Bill;
+import com.n11.entity.Company;
 import com.n11.entity.Customer;
 import com.n11.entity.Product;
-import com.n11.service.IBillService;
-import com.n11.service.ICustomerService;
-import com.n11.service.IProductService;
-import com.n11.service.PurchaseService;
+import com.n11.service.*;
 import com.n11.util.Mean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 
 @SpringBootApplication
@@ -31,6 +30,7 @@ public class CohortsHafta3Application {
         ICustomerService customerService = applicationContext.getBean(ICustomerService.class);
         IBillService billService = applicationContext.getBean(IBillService.class);
         IProductService productService = applicationContext.getBean(IProductService.class);
+        ICompanyService companyService = applicationContext.getBean(ICompanyService.class);
 
 
         customerService.save(new Customer("Ali", "Veli", "aliveli@email.com", LocalDate.of(1994, 10, 11)));
@@ -85,6 +85,15 @@ public class CohortsHafta3Application {
         );
         System.out.println(lineSeparator);
 
+        System.out.println("Sector of companies that has bills in the June having average totalAmountDue less than or equal to 750:\n");
+        System.out.println(
+                companyService
+                        .findAllByBills_MonthAndTotalAmountDueAverageLessThanOrEqual(Month.JUNE, 750)
+                        .stream()
+                        .map(Company::getSector)
+                        .collect(Collectors.toSet())
+        );
+        System.out.println(lineSeparator);
 
 
 

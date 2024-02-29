@@ -10,4 +10,5 @@ public interface IBillRepository extends IRepository<Bill, Long> {
     List<Bill> findAllByTotalAmountDueIsGreaterThanEqual(double limit);
     List<Bill> findAllByCustomerIdAndTotalAmountDueIsLessThanEqual(long customerId, double limit);
     List<Bill> findAllByCustomer_CreationTime_Month(Month month);
+    List<Bill> findAllByCompanyIdAndMonth(long companyId, Month month);
 }

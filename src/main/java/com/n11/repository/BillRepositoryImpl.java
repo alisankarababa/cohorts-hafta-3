@@ -55,4 +55,12 @@ public class BillRepositoryImpl extends RepositoryImpl<Bill, BillIdSequenceGener
                 })
                 .toList();
     }
+
+    @Override
+    public List<Bill> findAllByCompanyIdAndMonth(long companyId, Month month) {
+
+        return super.findAll().stream()
+                .filter(bill -> bill.getCompanyId() == companyId && bill.getTimeOfCreation().getMonth() == month)
+                .toList();
+    }
 }
