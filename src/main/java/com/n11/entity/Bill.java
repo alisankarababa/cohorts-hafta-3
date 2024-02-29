@@ -12,6 +12,7 @@ public class Bill extends BaseEntity implements ITotalAmountDue {
 
     private Long id;
     private Long customerId;
+    private Long companyId;
     private Double totalAmountDue;
 
     @Override
@@ -19,6 +20,7 @@ public class Bill extends BaseEntity implements ITotalAmountDue {
         return "Bill{" +
                 "id=" + id +
                 ", customerId=" + customerId +
+                ", companyId=" + companyId +
                 ", totalAmountDue=" + String.format("%.2f", totalAmountDue) +
                 ", timeOfCreation=" + super.getTimeOfCreation() +
                 '}';

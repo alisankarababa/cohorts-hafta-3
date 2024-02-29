@@ -2,8 +2,11 @@ package com.n11;
 
 import com.n11.entity.Bill;
 import com.n11.entity.Customer;
+import com.n11.entity.Product;
 import com.n11.service.IBillService;
 import com.n11.service.ICustomerService;
+import com.n11.service.IProductService;
+import com.n11.service.PurchaseService;
 import com.n11.util.Mean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,7 +14,10 @@ import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 
 @SpringBootApplication
@@ -24,6 +30,7 @@ public class CohortsHafta3Application {
         String lineSeparator = "\n\n------------------------------------------------------------------------------------------------\n\n";
         ICustomerService customerService = applicationContext.getBean(ICustomerService.class);
         IBillService billService = applicationContext.getBean(IBillService.class);
+        IProductService productService = applicationContext.getBean(IProductService.class);
 
 
         customerService.save(new Customer("Ali", "Veli", "aliveli@email.com", LocalDate.of(1994, 10, 11)));
@@ -32,6 +39,9 @@ public class CohortsHafta3Application {
         customerService.save(new Customer("Mehmet", "Cemal", "mehmetcemal@email.com", LocalDate.of(1988, 7, 8)));
         customerService.save(new Customer("Ceren", "Demir", "cerendemir@email.com", LocalDate.of(1992, 12, 3)));
 
+        List<Product> allProducts = productService.findAll();
+        List<Customer> allCustomers = customerService.findAll();
+        randomlyPurchase(applicationContext.getBean(PurchaseService.class), allCustomers, allProducts);
 
         System.out.println("All customers:\n");
         customerService.findAll().forEach( customer -> System.out.println("-" + customer + "\n"));
@@ -75,6 +85,28 @@ public class CohortsHafta3Application {
         );
         System.out.println(lineSeparator);
 
+
+
+
+    }
+
+    private static void randomlyPurchase(PurchaseService purchaseService, List<Customer> customerList, List<Product> productList) {
+
+        customerList.forEach(
+            customer -> {
+
+                List<Product> chosenProducts = getRandomProducts(productList);
+                purchaseService.purchase(customer, chosenProducts);
+            }
+        );
+    }
+
+    private static List<Product> getRandomProducts(List<Product> productList) {
+
+        Random random = new Random();
+        int cntProduct = random.nextInt(1, productList.size());
+        Collections.shuffle(new ArrayList<>(productList));
+        return productList.subList(0, cntProduct - 1);
     }
 
 }

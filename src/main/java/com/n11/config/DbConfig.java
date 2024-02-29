@@ -1,33 +1,41 @@
 package com.n11.config;
 
+import com.n11.enums.eSector;
 import com.n11.entity.Bill;
+import com.n11.entity.Company;
 import com.n11.entity.Customer;
+import com.n11.entity.Product;
 import com.n11.sequence_generator.BillIdSequenceGenerator;
+import com.n11.sequence_generator.CompanyIdSequenceGenerator;
 import com.n11.sequence_generator.CustomerIdSequenceGenerator;
+import com.n11.sequence_generator.ProductIdSequenceGenerator;
+import com.n11.util.Billing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 @Configuration
 public class DbConfig {
 
     private final CustomerIdSequenceGenerator customerIdSequenceGenerator;
     private final BillIdSequenceGenerator billIdSequenceGenerator;
+    private final CompanyIdSequenceGenerator companyIdSequenceGenerator;
+    private final ProductIdSequenceGenerator productIdSequenceGenerator;
 
     private final Random random;
 
     @Autowired
-    public DbConfig(CustomerIdSequenceGenerator customerIdSequenceGenerator, BillIdSequenceGenerator billIdSequenceGenerator) {
+    public DbConfig(CustomerIdSequenceGenerator customerIdSequenceGenerator, BillIdSequenceGenerator billIdSequenceGenerator, CompanyIdSequenceGenerator companyIdSequenceGenerator, ProductIdSequenceGenerator productIdSequenceGenerator) {
         this.customerIdSequenceGenerator = customerIdSequenceGenerator;
         this.billIdSequenceGenerator = billIdSequenceGenerator;
+        this.companyIdSequenceGenerator = companyIdSequenceGenerator;
+        this.productIdSequenceGenerator = productIdSequenceGenerator;
         this.random = new Random();
     }
 
@@ -100,39 +108,116 @@ public class DbConfig {
     }
 
     @Bean
-    public Map<Long, Bill> billMap(Map<Long, Customer> customerMap) {
+    public Map<Long, Company> companyMap() {
+
+        Map<Long, Company> companyMap = new HashMap<>();
+
+        LocalDateTime localDateTime1 = randomLocalDateTime();
+
+        Company company1 = new Company();
+        company1.setId(companyIdSequenceGenerator.generateId());
+        company1.setName("TechCompany");
+        company1.setSector(eSector.TECHNOLOGY);
+        company1.setTimeOfCreation(localDateTime1);
+        company1.setTimeOfUpdate(localDateTime1);
+        companyMap.put(company1.getId(), company1);
+
+
+        LocalDateTime localDateTime2 = randomLocalDateTime();
+        Company company2 = new Company();
+        company2.setId(companyIdSequenceGenerator.generateId());
+        company2.setName("EnergyCompany");
+        company2.setSector(eSector.ENERGY);
+        company2.setTimeOfCreation(localDateTime2);
+        company2.setTimeOfUpdate(localDateTime2);
+        companyMap.put(company2.getId(), company2);
+
+
+        LocalDateTime localDateTime3 = randomLocalDateTime();
+        Company company3 = new Company();
+        company3.setId(companyIdSequenceGenerator.generateId());
+        company3.setName("FinanceCompany");
+        company3.setSector(eSector.FINANCE);
+        company3.setTimeOfCreation(localDateTime3);
+        company3.setTimeOfUpdate(localDateTime3);
+        companyMap.put(company3.getId(), company3);
+
+
+        LocalDateTime localDateTime4 = randomLocalDateTime();
+        Company company4 = new Company();
+        company4.setId(companyIdSequenceGenerator.generateId());
+        company4.setName("HealthCareCompany");
+        company4.setSector(eSector.HEALTHCARE);
+        company4.setTimeOfCreation(localDateTime4);
+        company4.setTimeOfUpdate(localDateTime4);
+        companyMap.put(company4.getId(), company4);
+
+        return companyMap;
+    }
+
+    @Bean
+    public Map<Long, Product> productMap(Map<Long, Company> companyMap) {
+        Map<Long, Product> productMap = new HashMap<>();
+
+        companyMap.values().forEach(
+            company -> {
+                int cntProduct = random.nextInt(20, 30);
+                for(int i = 0; i < cntProduct; ++i) {
+                    Product product = createProduct(company);
+                    productMap.put(product.getId(), product);
+                }
+            }
+        );
+
+        return productMap;
+    }
+
+    @Bean
+    public Map<Long, Bill> billMap(Map<Long, Customer> customerMap, Map<Long, Product> productMap) {
 
         Map<Long, Bill> billMap = new HashMap<>();
 
         customerMap.values().forEach(customer -> {
 
-            int randomVal = random.nextInt(1, 4);
+            int cntProduct = random.nextInt(1, productMap.size());
+            List<Product> productList = getRandomProducts(productMap, cntProduct);
+            List<Bill> billList = Billing.createBillsForProductsGroupedByCompanyId(customer, productList);
 
-            for(int i = 0; i < randomVal; ++i) {
-                Bill randomBill = randomBill(customer);
-                billMap.put(randomBill.getId(), randomBill);
-            }
+            billList.forEach(bill -> {
+                LocalDateTime randomLocalDateTime = randomLocalDateTime(customer.getTimeOfCreation(), LocalDateTime.now());
+                bill.setId(billIdSequenceGenerator.generateId());
+                bill.setTimeOfCreation(randomLocalDateTime);
+                bill.setTimeOfUpdate(randomLocalDateTime);
+                billMap.put(bill.getId(), bill);
+            });
         });
 
         return billMap;
     }
 
-    private Bill randomBill(Customer customer) {
+    private List<Product> getRandomProducts(Map<Long, Product> productMap, int cnt) {
 
-        double min = 100;
-        double max = 3000;
-
-        Bill bill = new Bill();
-        bill.setId(billIdSequenceGenerator.generateId());
-        bill.setCustomerId(customer.getId());
-        LocalDateTime randomLocalDateTime = randomLocalDateTime();
-
-        bill.setTotalAmountDue(random.nextDouble(min, max));
-        bill.setTimeOfCreation(randomLocalDateTime);
-        bill.setTimeOfUpdate(randomLocalDateTime);
-
-        return bill;
+        List<Product> productList = new ArrayList<>(productMap.values());
+        Collections.shuffle(productList);
+        return productList.subList(0, cnt - 1);
     }
+
+    private Product createProduct(Company company) {
+
+        double min = 30;
+        double max = 150;
+
+        Product product = new Product();
+
+        product.setId(productIdSequenceGenerator.generateId());
+        product.setPrice(random.nextDouble(min, max));
+        product.setCompanyId(company.getId());
+        product.setTimeOfCreation(randomLocalDateTime());
+        product.setTimeOfUpdate(product.getTimeOfUpdate());
+
+        return product;
+    }
+
 
     private LocalDateTime randomLocalDateTime() {
 
@@ -142,6 +227,17 @@ public class DbConfig {
 
         LocalDateTime start = LocalDateTime.of(2023, 1, 1, 0, 0, 0, 0);
         LocalDateTime end = LocalDateTime.now();
+
+        long randomEpochSecond = random.nextLong(start.toEpochSecond(zoneOffSet), end.toEpochSecond(zoneOffSet));
+
+        return LocalDateTime.ofEpochSecond(randomEpochSecond, 0, zoneOffSet);
+    }
+
+    private LocalDateTime randomLocalDateTime(LocalDateTime start, LocalDateTime end) {
+
+        LocalDateTime now = LocalDateTime.now();
+        ZoneId zone = ZoneId.of("Europe/Istanbul");
+        ZoneOffset zoneOffSet = zone.getRules().getOffset(now);
 
         long randomEpochSecond = random.nextLong(start.toEpochSecond(zoneOffSet), end.toEpochSecond(zoneOffSet));
 
